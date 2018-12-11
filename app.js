@@ -8,7 +8,13 @@ const session= require('express-session');
 const passport= require('passport');
 const path = require('path');
 const csrf = require('csurf');
+const helmet = require('helmet');
+
+// Initialize Express
 const app = express();
+
+// Use Helmet to protect from malformed HTTP headers
+app.use(helmet());
 
 // CSRF Protection
 app.use(bodyParser.urlencoded({ extended: false }));
