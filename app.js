@@ -1,12 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session= require('express-session');
 const passport= require('passport');
 const path = require('path');
+const csrf = require('csurf');
 const app = express();
+
+// CSRF Protection
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 //Load Routes
 const ideas = require('./routes/ideas');
@@ -94,6 +101,23 @@ app.get('/about',(req,res)=>{
 //Use routes
 app.use('/ideas',ideas)
 app.use('/users',users)
+
+// error handlers
+app.use((err, req, res, next) => {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  // handle CSRF token errors here if not CSURF forward to next middlewware
+  res.status(403);
+  res.send('It would seems your form failed to have the correct CSRF Token. We use these to protect your data.');
+  // No routes handled the request and no system error, that means 404 issue.
+  // Forward to next middleware to handle it.
+  if (!err) return next();
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  //res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // render the error page
+  res.status(err.status || 500);
+  res.send('Something went wrong!!');
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

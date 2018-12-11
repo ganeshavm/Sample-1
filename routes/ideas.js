@@ -1,7 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const csrf = require('csurf')
 const router = express.Router();
 const {ensureAuthenticated} = require('../helpers/auth');
+const csrfProtection = csrf({ cookie: true });
+const parseForm = bodyParser.urlencoded({ extended: false });
 
 // Load Helper
 
@@ -23,8 +27,10 @@ router.get('/',ensureAuthenticated,(req,res) =>
 });
 
 //Add idea Form
-router.get('/add', ensureAuthenticated,(req,res)=>{
-  res.render('ideas/add');
+router.get('/add', csrfProtection, ensureAuthenticated,(req,res)=>{
+  res.render('ideas/add',{
+    csrfToken: req.csrfToken(),
+  });
 });
 
 // Edit Idea form
