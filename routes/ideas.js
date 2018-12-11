@@ -34,7 +34,7 @@ router.get('/add', csrfProtection, ensureAuthenticated,(req,res)=>{
 });
 
 // Edit Idea form
-router.get('/edit/:id', ensureAuthenticated, (req,res) => {
+router.get('/edit/:id',csrfProtection, ensureAuthenticated, (req,res) => {
   Idea.findOne({
     _id: req.params.id
   })
@@ -45,7 +45,8 @@ router.get('/edit/:id', ensureAuthenticated, (req,res) => {
     }
 else {
   res.render('ideas/edit',{
-    idea:idea
+    idea:idea,
+    csrfToken: req.csrfToken(),
   });
 }
 });
@@ -86,7 +87,7 @@ req.flash('success_msg', 'Added Successfully');
 });
 
 // Update Idea form
-router.put('/:id',ensureAuthenticated, (req,res)=>{
+router.put('/:id', ensureAuthenticated, (req,res)=>{
 Idea.findOne({
   _id: req.params.id
 })
