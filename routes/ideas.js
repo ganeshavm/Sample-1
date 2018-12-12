@@ -1,7 +1,7 @@
 const express = require('express');
+const csrf = require('csurf');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const csrf = require('csurf')
 const router = express.Router();
 const {ensureAuthenticated} = require('../helpers/auth');
 const csrfProtection = csrf({ cookie: true });
