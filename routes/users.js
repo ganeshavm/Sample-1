@@ -21,8 +21,10 @@ router.get('/login',csrfProtection, (req,res)=>{
 })
 
 // User Register Route
-router.get('/register', (req,res)=>{
-  res.render('users/register');
+router.get('/register',csrfProtection, (req,res)=>{
+  res.render('users/register',{
+          csrfToken: req.csrfToken(),
+  });
 })
 
 // Login from post
