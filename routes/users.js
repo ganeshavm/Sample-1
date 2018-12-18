@@ -14,14 +14,14 @@ const User = mongoose.model('users');
 
 
 // User Login Route
-router.get('/login',csrfProtection, (req,res)=>{
+router.get('/login', csrfProtection, (req,res)=>{
   res.render('users/login',{
       csrfToken: req.csrfToken(),
   });
 })
 
 // User Register Route
-router.get('/register',csrfProtection, (req,res)=>{
+router.get('/register', csrfProtection, (req,res)=>{
   res.render('users/register',{
           csrfToken: req.csrfToken(),
   });
@@ -74,6 +74,7 @@ else {
       });
       bcrypt.genSalt(10,(err,salt)=>{
         bcrypt.hash(newUser.password, salt, (err, hash) =>{
+          //Remove these console logs when done testing features
           console.log(newUser.password);
           console.log(hash);
           if(err) throw err;
